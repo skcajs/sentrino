@@ -1,7 +1,7 @@
 import { Environment, OrbitControls } from "@react-three/drei";
 import { Canvas, ThreeEvent } from "@react-three/fiber";
 import { useLoader } from "@react-three/fiber";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { Mesh, MeshStandardMaterial, Object3D } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
@@ -15,21 +15,34 @@ interface SceneParams {
 const Model = ({ clickedObject, setClickedObject, setColour }: SceneParams) => {
   const gltf = useLoader(GLTFLoader, "./meshes/house.glb");
 
-  function handleEmissive(object: Object3D, emissive: number) {
-    if ((object as Mesh).isMesh) {
-      const material = (object as Mesh).material;
-      if (material instanceof MeshStandardMaterial) {
-        material.emissive.setHex(emissive);
-      }
+  useEffect(() => {
+    if (gltf) {
+      gltf.scene.traverse((child) => {
+        if ((child as Mesh).isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
     }
-    // object.traverse((child) => {
-    //   if ((child as Mesh).isMesh) {
-    //     const material = (child as Mesh).material;
-    //     if (material instanceof MeshStandardMaterial) {
-    //       material.emissive.setHex(emissive);
-    //     }
-    //   }
-    // });
+  }, [gltf]);
+
+  function handleEmissive(object: Object3D, emissive: number) {
+    object.traverse((child) => {
+      if ((child as Mesh).isMesh) {
+        const mesh = child as Mesh;
+        if (mesh.material instanceof MeshStandardMaterial) {
+          if (!mesh.userData.originalMaterial) {
+            // Store the original material in userData so we can restore it later
+            mesh.userData.originalMaterial = mesh.material;
+            // Clone the material to handle unique objects
+            // This is important to avoid modifying the original material
+            // when multiple objects share the same material
+            mesh.material = mesh.material.clone();
+          }
+          (mesh.material as MeshStandardMaterial).emissive.setHex(emissive);
+        }
+      }
+    });
   }
 
   return (
@@ -38,7 +51,9 @@ const Model = ({ clickedObject, setClickedObject, setColour }: SceneParams) => {
         object={gltf.scene}
         scale={1.0}
         onClick={(e: ThreeEvent<Event>) => {
-          console.log(e.object);
+          console.log(e.object.receiveShadow);
+          e.object.receiveShadow = true;
+          e.object.castShadow = true;
           e.stopPropagation();
           if (clickedObject !== e.object) {
             if (clickedObject) {
@@ -64,7 +79,7 @@ const Model = ({ clickedObject, setClickedObject, setColour }: SceneParams) => {
         onPointerOver={(e: ThreeEvent<PointerEvent>) => {
           e.stopPropagation();
           if (clickedObject !== e.object) {
-            handleEmissive(e.object, 0x222222); // Red highlight
+            handleEmissive(e.object, 0xff0000); // Red highlight
           }
         }}
         onPointerOut={(e: ThreeEvent<PointerEvent>) => {
@@ -107,6 +122,7 @@ export default function TestScene({
         }}
       >
         <Suspense fallback={null}>
+          <spotLight intensity={1} position={[4, 2000, 4]} castShadow />
           <Model
             clickedObject={clickedObject}
             setClickedObject={setClickedObject}
