@@ -16,14 +16,20 @@ const Model = ({ clickedObject, setClickedObject, setColour }: SceneParams) => {
   const gltf = useLoader(GLTFLoader, "./meshes/house.glb");
 
   function handleEmissive(object: Object3D, emissive: number) {
-    object.traverse((child) => {
-      if ((child as Mesh).isMesh) {
-        const material = (child as Mesh).material;
-        if (material instanceof MeshStandardMaterial) {
-          material.emissive.setHex(emissive);
-        }
+    if ((object as Mesh).isMesh) {
+      const material = (object as Mesh).material;
+      if (material instanceof MeshStandardMaterial) {
+        material.emissive.setHex(emissive);
       }
-    });
+    }
+    // object.traverse((child) => {
+    //   if ((child as Mesh).isMesh) {
+    //     const material = (child as Mesh).material;
+    //     if (material instanceof MeshStandardMaterial) {
+    //       material.emissive.setHex(emissive);
+    //     }
+    //   }
+    // });
   }
 
   return (
