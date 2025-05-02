@@ -13,7 +13,7 @@ interface SceneParams {
 }
 
 const Model = ({ clickedObject, setClickedObject, setColour }: SceneParams) => {
-  const gltf = useLoader(GLTFLoader, "./meshes/doghouse.gltf");
+  const gltf = useLoader(GLTFLoader, "./meshes/house.glb");
 
   function handleEmissive(object: Object3D, emissive: number) {
     object.traverse((child) => {
@@ -30,15 +30,16 @@ const Model = ({ clickedObject, setClickedObject, setColour }: SceneParams) => {
     <>
       <primitive
         object={gltf.scene}
-        scale={0.4}
+        scale={1.0}
         onClick={(e: ThreeEvent<Event>) => {
+          console.log(e.object);
           e.stopPropagation();
           if (clickedObject !== e.object) {
             if (clickedObject) {
-              handleEmissive(clickedObject, 0x000000); // Reset previous
+              handleEmissive(clickedObject, 0x000000);
             }
             setClickedObject(e.object);
-            handleEmissive(e.object, 0x444444); // Red highlight
+            handleEmissive(e.object, 0x444444);
 
             // Set color only on click
             e.object.traverse((child) => {
