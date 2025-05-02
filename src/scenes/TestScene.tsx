@@ -13,7 +13,7 @@ interface SceneParams {
 }
 
 const Model = ({ clickedObject, setClickedObject, setColour }: SceneParams) => {
-  const gltf = useLoader(GLTFLoader, "./meshes/WoodHouse.glb");
+  const gltf = useLoader(GLTFLoader, "./meshes/doghouse.gltf");
 
   function handleEmissive(object: Object3D, emissive: number) {
     object.traverse((child) => {

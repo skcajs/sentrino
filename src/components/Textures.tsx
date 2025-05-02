@@ -68,7 +68,7 @@ export default function Textures({ clickedObject }: TexturesProps) {
           // Once loaded, apply settings
           loadedTexture.wrapS = RepeatWrapping;
           loadedTexture.wrapT = RepeatWrapping;
-          loadedTexture.repeat.set(64, 2);
+          loadedTexture.repeat.set(8, 8);
           loadedTexture.anisotropy = 16;
 
           materials.forEach((mat) => {
