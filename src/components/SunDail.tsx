@@ -1,20 +1,20 @@
 import { Vector3 } from "three";
 import { Slider, Box } from "@mui/material";
-import WbSunnyIcon from "@mui/icons-material/WbSunny";         // Sun
-import Brightness2Icon from "@mui/icons-material/Brightness2"; // Moon
 
 interface SunDailProps {
     setSunPosition: React.Dispatch<React.SetStateAction<number | [x: number, y: number, z: number] | Vector3>>;
 }
 
 export default function SunDail({ setSunPosition }: SunDailProps) {
-    const handleSliderChange = (_: Event, value: number | number[]) => {
-        const time = Array.isArray(value) ? value[0] : value;
+    const handleSliderChange = (_: Event, value: number) => {
+        const time = value;
         const angle = (time / 24) * 2 * Math.PI;
 
         const x = 10 * Math.sin(angle);                   // East-west movement
         const y = 10 * Math.sin(angle - Math.PI / 2);     // Height: peak at noon
-        const z = 10 * Math.cos(angle);                   // North-south or depth
+        const z = -10 * Math.cos(angle);
+
+        console.log(x, y, z);// North-south or depth
 
         setSunPosition([x, y, z]);
     };
@@ -47,7 +47,7 @@ export default function SunDail({ setSunPosition }: SunDailProps) {
             >
 
                 <Slider
-                    defaultValue={0}
+                    defaultValue={12}
                     min={0}
                     max={24}
                     step={0.1}

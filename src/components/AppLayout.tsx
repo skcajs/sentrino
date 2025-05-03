@@ -12,7 +12,7 @@ export default function AppLayout() {
 
   const [sunPosition, setSunPosition] = useState<
     number | [x: number, y: number, z: number] | Vector3
-  >([16, 40, 10]);
+  >([0, 10, 10]);
 
   return (
     <>

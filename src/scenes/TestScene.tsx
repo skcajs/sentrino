@@ -1,4 +1,4 @@
-import { OrbitControls, Sky, useHelper } from "@react-three/drei";
+import { Environment, OrbitControls, Sky, useHelper } from "@react-three/drei";
 import { Canvas, ThreeEvent } from "@react-three/fiber";
 import { useLoader } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
@@ -52,8 +52,6 @@ const Model = ({ clickedObject, setClickedObject, setColour }: SceneParams) => {
         object={gltf.scene}
         scale={1.0}
         onClick={(e: ThreeEvent<Event>) => {
-          console.log(e.object.receiveShadow);
-          console.log(e.object.castShadow);
           e.object.receiveShadow = true;
           e.object.castShadow = true;
           e.stopPropagation();
@@ -104,16 +102,17 @@ const Lighting = ({ sunPosition }: LightingProps) => {
   useHelper(dirLightRef, DirectionalLightHelper, 1, "red");
 
   return (
-    <directionalLight
+    <><ambientLight intensity={0.2} /><directionalLight
       intensity={3}
       color="white"
       position={sunPosition}
       castShadow
-      shadow-mapSize-width={1024}
-      shadow-mapSize-height={1024}
+      shadow-bias={-0.00005}
+      shadow-mapSize-width={4096}
+      shadow-mapSize-height={4096}
       ref={dirLightRef}>
       <orthographicCamera attach="shadow-camera" args={[-10, 10, 10, -10]} />
-    </directionalLight>
+    </directionalLight></>
   );
 };
 
