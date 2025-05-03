@@ -1,13 +1,18 @@
 import { AppBar, Box, Drawer, Toolbar } from "@mui/material";
 import "./AppLayout.css";
 import TestScene from "../scenes/TestScene";
-import { Object3D } from "three";
+import { Object3D, Vector3 } from "three";
 import { useState } from "react";
 import FaceEditor from "./FaceEditor";
+import SunDail from "./SunDail";
 
 export default function AppLayout() {
   const [clickedObject, setClickedObject] = useState<Object3D | null>(null);
   const [colour, setColour] = useState("#aabbcc");
+
+  const [sunPosition, setSunPosition] = useState<
+    number | [x: number, y: number, z: number] | Vector3
+  >([16, 40, 10]);
 
   return (
     <>
@@ -30,6 +35,7 @@ export default function AppLayout() {
           setClickedObject={setClickedObject}
           colour={colour}
           setColour={setColour}
+          sunPosition={sunPosition}
         />
 
         <Drawer
@@ -53,6 +59,8 @@ export default function AppLayout() {
           <br />
           <Box sx={{ position: "absolute", width: "100%" }}></Box>
         </Drawer>
+
+        <SunDail setSunPosition={setSunPosition} />
       </Box>
     </>
   );

@@ -1,8 +1,8 @@
-import { Environment, OrbitControls } from "@react-three/drei";
+import { OrbitControls, Sky, useHelper } from "@react-three/drei";
 import { Canvas, ThreeEvent } from "@react-three/fiber";
 import { useLoader } from "@react-three/fiber";
-import { Suspense, useEffect } from "react";
-import { Mesh, MeshStandardMaterial, Object3D } from "three";
+import { Suspense, useEffect, useRef } from "react";
+import { DirectionalLight, DirectionalLightHelper, Mesh, MeshStandardMaterial, Object3D, Vector3 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 interface SceneParams {
@@ -10,6 +10,7 @@ interface SceneParams {
   setClickedObject: React.Dispatch<React.SetStateAction<Object3D | null>>;
   colour: string;
   setColour: React.Dispatch<React.SetStateAction<string>>;
+  sunPosition: number | [x: number, y: number, z: number] | Vector3;
 }
 
 const Model = ({ clickedObject, setClickedObject, setColour }: SceneParams) => {
@@ -52,6 +53,7 @@ const Model = ({ clickedObject, setClickedObject, setColour }: SceneParams) => {
         scale={1.0}
         onClick={(e: ThreeEvent<Event>) => {
           console.log(e.object.receiveShadow);
+          console.log(e.object.castShadow);
           e.object.receiveShadow = true;
           e.object.castShadow = true;
           e.stopPropagation();
@@ -79,7 +81,7 @@ const Model = ({ clickedObject, setClickedObject, setColour }: SceneParams) => {
         onPointerOver={(e: ThreeEvent<PointerEvent>) => {
           e.stopPropagation();
           if (clickedObject !== e.object) {
-            handleEmissive(e.object, 0xff0000); // Red highlight
+            handleEmissive(e.object, 0x444444); // Red highlight
           }
         }}
         onPointerOut={(e: ThreeEvent<PointerEvent>) => {
@@ -93,15 +95,39 @@ const Model = ({ clickedObject, setClickedObject, setColour }: SceneParams) => {
   );
 };
 
+interface LightingProps {
+  sunPosition: number | [x: number, y: number, z: number] | Vector3;
+}
+
+const Lighting = ({ sunPosition }: LightingProps) => {
+  const dirLightRef = useRef<DirectionalLight>(null) as React.RefObject<DirectionalLight>;
+  useHelper(dirLightRef, DirectionalLightHelper, 1, "red");
+
+  return (
+    <directionalLight
+      intensity={3}
+      color="white"
+      position={sunPosition}
+      castShadow
+      shadow-mapSize-width={1024}
+      shadow-mapSize-height={1024}
+      ref={dirLightRef}>
+      <orthographicCamera attach="shadow-camera" args={[-10, 10, 10, -10]} />
+    </directionalLight>
+  );
+};
+
 export default function TestScene({
   clickedObject,
   setClickedObject,
   colour,
   setColour,
+  sunPosition
 }: SceneParams) {
+
   return (
     <>
-      <Canvas
+      <Canvas shadows
         onPointerMissed={(e) => {
           if (e.button === 0) {
             // reset the emissive
@@ -122,15 +148,17 @@ export default function TestScene({
         }}
       >
         <Suspense fallback={null}>
-          <spotLight intensity={1} position={[4, 2000, 4]} castShadow />
+          <Sky distance={45000} sunPosition={sunPosition} inclination={1} azimuth={0.25} />
+          <Lighting sunPosition={sunPosition} />
           <Model
             clickedObject={clickedObject}
             setClickedObject={setClickedObject}
             colour={colour}
             setColour={setColour}
+            sunPosition={sunPosition}
           />
           <OrbitControls />
-          <Environment preset="forest" background />
+          {/* <Environment preset="forest" background /> */}
         </Suspense>
       </Canvas>
     </>
