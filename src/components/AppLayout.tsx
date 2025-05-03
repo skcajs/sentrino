@@ -4,7 +4,7 @@ import TestScene from "../scenes/TestScene";
 import { Object3D, Vector3 } from "three";
 import { useState } from "react";
 import FaceEditor from "./FaceEditor";
-import SunDail from "./SunDail";
+import SunDial from "./SunDial";
 
 export default function AppLayout() {
   const [clickedObject, setClickedObject] = useState<Object3D | null>(null);
@@ -60,7 +60,7 @@ export default function AppLayout() {
           <Box sx={{ position: "absolute", width: "100%" }}></Box>
         </Drawer>
 
-        <SunDail setSunPosition={setSunPosition} />
+        <SunDial setSunPosition={setSunPosition} />
       </Box>
     </>
   );

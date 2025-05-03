@@ -5,7 +5,7 @@ interface SunDailProps {
     setSunPosition: React.Dispatch<React.SetStateAction<number | [x: number, y: number, z: number] | Vector3>>;
 }
 
-export default function SunDail({ setSunPosition }: SunDailProps) {
+export default function SunDial({ setSunPosition }: SunDailProps) {
     const handleSliderChange = (_: Event, value: number) => {
         const time = value;
         const angle = (time / 24) * 2 * Math.PI;
