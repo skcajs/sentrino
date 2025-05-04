@@ -15,15 +15,16 @@ interface SceneParams {
 }
 
 const Terrain = () => {
-  const height = useLoader(THREE.TextureLoader, "/textures/elevation.png");
-  const normals = useLoader(THREE.TextureLoader, "/textures/normals.png");
-  const colors = useLoader(THREE.TextureLoader, "/textures/colors.png");
+  const height = useLoader(THREE.TextureLoader, "/textures/rolling_hills_heightmap2.png");
+  const normals = useLoader(THREE.TextureLoader, "/textures/rolling_hills_normals.png");
+  const colors = useLoader(THREE.TextureLoader, "/textures/rolling_hills_colour.png");
 
   return (
     <Plane
       rotation={[-Math.PI / 2, 0, 0]}
       position={[0, 0, 0]}
-      args={[64, 64, 1024, 1024]}
+      receiveShadow
+      args={[64, 64, 2048, 2048]}
     >
       <meshStandardMaterial
         attach="material"
@@ -32,6 +33,7 @@ const Terrain = () => {
         metalness={0.2}
         normalMap={normals}
         displacementMap={height}
+        displacementScale={15.0}
       />
     </Plane>
 
@@ -171,8 +173,10 @@ export default function TestScene({
           }
         }}
       >
+
         <Suspense fallback={null}>
           <Sky distance={45000} sunPosition={sunPosition} inclination={1} azimuth={0.25} />
+          <fog attach="fog" args={["white", 0, 26]} />
           <Lighting sunPosition={sunPosition} />
           <Model
             clickedObject={clickedObject}
