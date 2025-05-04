@@ -10,12 +10,22 @@ import {
 import { TextureLoader } from "three";
 
 const textures = [
-  "marble",
-  "plaster_wall",
-  "stone_patio",
-  "wood_base_sharp",
-  "wood_base",
-  "wood_floor",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
 ];
 
 const TexturePreview = ({
@@ -91,6 +101,8 @@ export default function Textures({ clickedObject }: TexturesProps) {
         display: "grid",
         gridTemplateColumns: "repeat(2, 1fr)",
         gap: "16px",
+        maxHeight: "400px",
+        overflowY: "auto",
       }}
     >
       {textures.map((textureName) => (

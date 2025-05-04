@@ -14,8 +14,6 @@ export default function SunDial({ setSunPosition }: SunDailProps) {
         const y = 10 * Math.sin(angle - Math.PI / 2);     // Height: peak at noon
         const z = -10 * Math.cos(angle);
 
-        console.log(x, y, z);// North-south or depth
-
         setSunPosition([x, y, z]);
     };
 

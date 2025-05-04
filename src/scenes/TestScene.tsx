@@ -1,4 +1,5 @@
-import { Environment, OrbitControls, Sky, useHelper } from "@react-three/drei";
+import { OrbitControls, Plane, Sky, useHelper } from "@react-three/drei";
+import * as THREE from "three";
 import { Canvas, ThreeEvent } from "@react-three/fiber";
 import { useLoader } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
@@ -12,6 +13,30 @@ interface SceneParams {
   setColour: React.Dispatch<React.SetStateAction<string>>;
   sunPosition: number | [x: number, y: number, z: number] | Vector3;
 }
+
+const Terrain = () => {
+  const height = useLoader(THREE.TextureLoader, "/textures/elevation.png");
+  const normals = useLoader(THREE.TextureLoader, "/textures/normals.png");
+  const colors = useLoader(THREE.TextureLoader, "/textures/colors.png");
+
+  return (
+    <Plane
+      rotation={[-Math.PI / 2, 0, 0]}
+      position={[0, 0, 0]}
+      args={[64, 64, 1024, 1024]}
+    >
+      <meshStandardMaterial
+        attach="material"
+        color="white"
+        map={colors}
+        metalness={0.2}
+        normalMap={normals}
+        displacementMap={height}
+      />
+    </Plane>
+
+  );
+};
 
 const Model = ({ clickedObject, setClickedObject, setColour }: SceneParams) => {
   const gltf = useLoader(GLTFLoader, "./meshes/house.glb");
@@ -156,6 +181,7 @@ export default function TestScene({
             setColour={setColour}
             sunPosition={sunPosition}
           />
+          <Terrain />
           <OrbitControls />
           {/* <Environment preset="forest" background /> */}
         </Suspense>
