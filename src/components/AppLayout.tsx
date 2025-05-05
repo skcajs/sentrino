@@ -1,6 +1,6 @@
 import { AppBar, Box, Drawer, Toolbar } from "@mui/material";
 import "./AppLayout.css";
-import TestScene from "../scenes/TestScene";
+import TestScene from "../canvas/Scene";
 import { Object3D, Vector3 } from "three";
 import { useState } from "react";
 import FaceEditor from "./FaceEditor";

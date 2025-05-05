@@ -153,7 +153,9 @@ export default function TestScene({
 
   return (
     <>
-      <Canvas shadows
+      <Canvas
+        camera={{ position: [0, 5, 10], fov: 50 }}
+        shadows
         onPointerMissed={(e) => {
           if (e.button === 0) {
             // reset the emissive
